@@ -105,7 +105,7 @@ fun LoginScreen (onLoginSuccess: () -> Unit){
      )
 
         OutlinedTextField(value = password, onValueChange = {password = it},
-            label = { Text(text = "Username")},
+            label = { Text(text = "Password")},
             shape = RoundedCornerShape(20.dp),
             colors = TextFieldDefaults.colors(
                 focusedLeadingIconColor = GreenJC,
