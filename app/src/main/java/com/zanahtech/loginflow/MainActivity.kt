@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,8 +30,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,8 +42,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph
 import androidx.navigation.NavHost
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.zanahtech.loginflow.ui.theme.GreenJC
 import com.zanahtech.loginflow.ui.theme.LoginflowTheme
 
@@ -49,11 +55,16 @@ class MainActivity : ComponentActivity() {
         setContent {
             LoginflowTheme {
                 // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+               Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .paint(
+                            painterResource(id = R.drawable.jclogin),
+                            contentScale = ContentScale.FillBounds
+                        )
                 ) {
-
+                    val navController = rememberNavController()
+                   NavGraph(navController)
                 }
             }
         }
@@ -139,15 +150,17 @@ private fun authenticate(username: String, password: String): Boolean{
 }
 
 @Composable
-fun NavGraph(navController: NavController){
+fun NavGraph(navController: NavHostController){
     NavHost(navController = navController, startDestination = "login"){
         composable("login"){
-            LoginScreen({onLoginSuccess = {
-
-
-            }}) {
-
-            }
+            LoginScreen( onLoginSuccess = {
+                navController.navigate("home"){
+                    popUpTo(0)
+                }
+            })
+        }
+        composable("home"){
+            HomeScreen()
         }
     }
 }
